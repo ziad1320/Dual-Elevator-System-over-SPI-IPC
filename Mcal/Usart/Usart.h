@@ -1,37 +1,32 @@
 /**
- * Usart.h
+* Usart.h
  *
- *  Created on: Wed May 24 2023
- *  Author    : Abdullah Darwish
+ * Description: Public API for STM32F401xE USART2 Driver (Telemetry)
+ * Project    : Collaborative Dual-Elevator System
  */
 
 #ifndef USART_H
 #define USART_H
 
 #include "Std_Types.h"
-#define Tx_OK    0U
-#define Tx_NOK   1U
 
-void Usart1_Init(void);
+/* ========================================================================= */
+/* FUNCTION PROTOTYPES                                                       */
+/* ========================================================================= */
 
-uint8 Usart1_TransmitByte(uint8 Byte);
-
-uint8 Usart1_ReceiveByte(void);
-
-void Usart1_TransmitString(const char* Str);
-
-/*
- * Non‑blocking read of a single byte.
- * Returns 0 if no data, else 1 and the byte in *data.
+/**
+ * @brief Initializes USART2 on PA2 (TX) for 9600 baud, 8-N-1.
+ * Configures the USART to trigger DMA requests for transmission.
  */
-uint8 Usart1_GetByte(uint8 *data);
+void Usart2_Init(void);
 
-/*
- * Extracts a complete line (terminated by '\n' or '\r') from the ring buffer.
- * The line is stored in 'buffer' with a null terminator (maxLen-1 chars max).
- * Returns NULL if no full line is available.
- * The caller must ensure buffer has at least maxLen bytes.
+/**
+ * @brief Sends a string using polling (blocking).
+ * NOTE: This is provided STRICTLY for initial PC terminal testing.
+ * It must NOT be used in the final system to adhere to the
+ * "zero CPU overhead" requirement.
+ * * @param Str Null-terminated string to send.
  */
-char* Usart1_ReadLine(char *buffer, uint32 maxLen);
+void Usart2_TransmitStringTest(const char* Str);
 
 #endif /* USART_H */
