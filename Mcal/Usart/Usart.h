@@ -20,13 +20,5 @@
  */
 void Usart2_Init(void);
 
-/**
- * @brief Sends a string using polling (blocking).
- * NOTE: This is provided STRICTLY for initial PC terminal testing.
- * It must NOT be used in the final system to adhere to the
- * "zero CPU overhead" requirement.
- * * @param Str Null-terminated string to send.
- */
-void Usart2_TransmitStringTest(const char* Str);
 
 #endif /* USART_H */
