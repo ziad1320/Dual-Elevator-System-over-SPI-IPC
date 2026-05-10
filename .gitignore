@@ -1,0 +1,10 @@
+.idea/
+.vscode/
+cmake-build-*/
+build*/
+*.zip
+cmake/
+STM32-base/
+STM32-base-STM32Cube/
+CmakeLists.txt
+.cache/
