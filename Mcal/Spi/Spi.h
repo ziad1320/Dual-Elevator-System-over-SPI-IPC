@@ -1,48 +1,19 @@
-/**
- * Spi.h
- *
- *  Created on: Wed May 24 2023
- *  Author    : Abdullah Darwish
- */
+//
+// Created by zramd on 13/05/2026.
+//
 
 #ifndef SPI_H
 #define SPI_H
 
-#include "Std_Types.h"
+#include "../include/STD_TYPES.h"
+#include "../IPC/Ipc.h"
 
-typedef struct 
-{
-    uint32 CR1;
-    uint32 UNUSED;
-    uint32 SR;
-    uint32 DR;
-    uint32 CRCPR;
-    uint32 RXCRCR;
-    uint32 TXCRCR;
-    uint32 I2SCFGR;
-    uint32 I2SPR;
-}SpiType;
+extern volatile uint8 spi_transfer_complete;
+extern Ipc_Packet_t rx_packet;
+extern Ipc_Packet_t tx_packet; // <-- ADD THIS LINE
 
+void Spi2_Init_Master(void);
+void Spi2_Init_Slave(void);
+void Spi2_Start_Exchange(Ipc_Packet_t* local_data);
 
-/* Master or Slave */
-#define SPI_SLAVE  0
-#define SPI_MASTER 1
-
-/* Clock Polarity */
-#define SPI_IDLE_LOW  0
-#define SPI_IDLE_HIGH 1
-
-/* Clock Phase */
-#define SPI_SAMPLE_FIRST_TRANSITION  0 // Read or Capture on first transition
-#define SPI_SAMPLE_SECOND_TRANSITION 1
-
-#define SPI_OK     0U
-#define SPI_NOK    1U
-
-
-
-void Spi1_Init(uint8 MasterSlave, uint8 ClkPol, uint8 ClkPhase);
-
-uint8 Spi1_TransmitReceiveByte(uint8 TxData, uint8* RxData);
-
-#endif /* SPI_H */
+#endif

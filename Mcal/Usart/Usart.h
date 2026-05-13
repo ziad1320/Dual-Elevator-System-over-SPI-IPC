@@ -1,24 +1,19 @@
-/**
-* Usart.h
- *
- * Description: Public API for STM32F401xE USART2 Driver (Telemetry)
- * Project    : Collaborative Dual-Elevator System
- */
+//
+// Created by Khalaf on 29/04/2026.
+//
 
 #ifndef USART_H
 #define USART_H
-
-#include "Std_Types.h"
-
-/* ========================================================================= */
-/* FUNCTION PROTOTYPES                                                       */
-/* ========================================================================= */
-
-/**
- * @brief Initializes USART2 on PA2 (TX) for 9600 baud, 8-N-1.
- * Configures the USART to trigger DMA requests for transmission.
- */
-void Usart2_Init(void);
+#include "../include/STD_TYPES.h"
 
 
-#endif /* USART_H */
+void Usart1_Init(void);
+
+uint8 Usart1_TransmitByte(uint8 Byte);
+
+uint8 Usart1_RecieveByte(void);
+
+void Usart1_TransmitString(const char* Str);
+
+
+#endif //USART_H

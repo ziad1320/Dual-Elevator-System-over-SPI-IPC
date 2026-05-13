@@ -1,48 +1,56 @@
-/**
- * Timer.h
- *
- * Description: Public API for Timer and PWM functionality
- * Project    : Collaborative Dual-Elevator System
- */
+//
+// Created by Khalaf on 30/04/2026.
+//
 
 #ifndef TIMER_H
 #define TIMER_H
+#include <STD_TYPES.h>
+#include "Timer.h"
 
-#include "Std_Types.h"
+typedef enum {
+    /* OCxM[2:0] = 011 (Toggle on match), OCxPE = 0 */
+    TIM_OC_TOGGLE       = 0x30U,
 
-#define NUM_OF_TIMERS 5U
+    /* OCxM[2:0] = 110 (PWM Mode 1), OCxPE = 1 (Preload enable) */
+    TIM_OC_PWM1_PRELOAD = 0x68U
+} Tim_OutputCompareMode_t;
 
-/* Timer IDs */
-#define TIMER_1 1U // Advanced (Use for PWM)
-#define TIMER_2 2U // General (Use for Base FSM timing)
-#define TIMER_3 3U
-#define TIMER_4 4U
-#define TIMER_5 5U
+typedef enum {
+    TIM_INSTANCE_2 = 2U,
+    TIM_INSTANCE_3 = 3U,
+    TIM_INSTANCE_4 = 4U,
+    TIM_INSTANCE_5 = 5U
+} Tim_Instance_t;
 
-/* PWM Channels */
-#define CH1 1U
-#define CH2 2U
-#define CH3 3U
-#define CH4 4U
 
-// Callback function pointer type for async delays
-typedef void (*Timer_Callback)(void);
+typedef enum {
+    TIM_CHANNEL_1 = 1U,
+    TIM_CHANNEL_2 = 2U,
+    TIM_CHANNEL_3 = 3U,
+    TIM_CHANNEL_4 = 4U
+} Tim_Channel_t;
+typedef enum {
+    /* 16 MHz / (0 + 1) = 16 MHz (Maximum speed) */
+    TIM_PRESCALER_DIV_1     = 0U,
 
-/* ========================================================================= */
-/* FUNCTION PROTOTYPES                                                       */
-/* ========================================================================= */
+    /* 16 MHz / (15 + 1) = 1 MHz Timer Clock (1 tick = 1 microsecond) */
+    TIM_PRESCALER_1US_TICK  = 15U,
 
-// General Timer Functions
-void Timer_Init(uint8 TimerId, uint16 Prescaler, uint16 AutoReload);
-void Timer_Start(uint8 TimerId);
-void Timer_Stop(uint8 TimerId);
+    /* 16 MHz / (15999 + 1) = 1 kHz Timer Clock (1 tick = 1 millisecond) */
+    TIM_PRESCALER_1MS_TICK  = 15999U
 
-// Delay Functions (Non-blocking required for Elevator FSM)
-void Timer_DelayMs(uint8 TimerId, uint32 DelayMs);
-void Timer_DelayMsAsync(uint8 TimerId, uint32 DelayMs, Timer_Callback Callback);
+} Tim_Prescaler_t;
+typedef void (*TimerCallback_t)(void);
+void Timer_Init(Tim_Instance_t TimerInstance, Tim_Prescaler_t Prescaler, uint16 AutoReload);
+void Timer_Start(Tim_Instance_t TimerInstance);
 
-// PWM Functions (Required for Motor Simulation)
-void Timer_PwmInit(uint8 TimerId, uint8 Channel);
-void Timer_PwmSetDuty(uint8 TimerId, uint8 Channel, uint8 DutyPercent);
+void Timer_Stop(Tim_Instance_t TimerInstance);
 
-#endif /* TIMER_H */
+void Timer_DelayMs(Tim_Instance_t TimerInstance, uint32 DelayMs);
+void Timer_ConfigChannel(Tim_Instance_t TimerInstance, Tim_Channel_t Channel,Tim_Prescaler_t Prescaler
+                         , Tim_OutputCompareMode_t Mode, uint16 Period);
+void Timer_DelayMsAsync(Tim_Instance_t TimerInstance, uint32 DelayMs, TimerCallback_t Callback);
+void Timer_SetCompareValue(Tim_Instance_t TimerInstance, Tim_Channel_t Channel, uint32 CompareValue);
+
+void Timer_StartPeriodic(Tim_Instance_t TimerInstance, uint32 PeriodMs, TimerCallback_t Callback);
+#endif //TIMER_H
