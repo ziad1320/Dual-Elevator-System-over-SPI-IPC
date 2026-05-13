@@ -105,3 +105,7 @@ int main(void) {
     }
   }
 }
+
+void _init(void) {
+  /* Dummy implementation to satisfy libc initialization */
+}

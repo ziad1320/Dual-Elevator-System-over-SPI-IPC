@@ -8,7 +8,7 @@
 #include "Timer.h"
 #include "Timer_Private.h"
 #include "Nvic.h"
-#include "Bit_Operations.h"
+#include "Bit_Math.h"
 
 // Address mapping (1-indexed to match TimerId)
 static const uint32 timer_base_addresses[NUM_OF_TIMERS] = {

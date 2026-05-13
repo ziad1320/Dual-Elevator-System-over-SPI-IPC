@@ -7,6 +7,13 @@
 #ifndef STD_TYPES_H
 #define STD_TYPES_H
 
+#include <stdint.h>
+
+// Define macro for hardware register access
+#ifndef REG32
+#define REG32(ADDRESS) (*((volatile uint32_t *)(ADDRESS)))
+#endif
+
 typedef signed char         sint8;          /*        -128 .. +127            */
 typedef unsigned char       uint8;          /*           0 .. 255             */
 typedef signed short        sint16;         /*      -32768 .. +32767          */
