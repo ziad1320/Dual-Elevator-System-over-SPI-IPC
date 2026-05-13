@@ -5,7 +5,7 @@
 #ifndef IPC_H
 #define IPC_H
 
-#include "../include/STD_TYPES.h"
+#include "Std_Types.h"
 #include "stm32f4xx.h"
 
 #define IPC_HEADER_BYTE 0xA5

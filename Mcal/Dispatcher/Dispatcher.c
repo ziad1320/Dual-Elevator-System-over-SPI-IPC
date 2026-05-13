@@ -5,6 +5,11 @@
 #include "Dispatcher.h"
 #include "../IPC/Ipc.h"
 
+// Math absolute function
+static uint8 Abs_Dist(uint8 a, uint8 b) {
+    return (a > b) ? (a - b) : (b - a);
+}
+
 #define SCORE_IMMEDIATE    0
 #define SCORE_PERFECT      1
 #define SCORE_PASSED       2
@@ -39,12 +44,25 @@ uint8 Dispatch_Call(Ipc_Packet_t* master_elev, Ipc_Packet_t* slave_elev, uint8 c
     uint8 scoreA = Calculate_Dispatch_Score(master_elev, call_floor, call_dir_is_up);
     uint8 scoreB = Calculate_Dispatch_Score(slave_elev, call_floor, call_dir_is_up);
 
-    // Lower score wins. Master takes ties.
-    if (scoreA <= scoreB && scoreA != SCORE_OPPOSITE) {
-        return 1; // Assign to Master
-    } else if (scoreB != SCORE_OPPOSITE) {
-        return 2; // Assign to Slave
+    // If both are opposite, no one takes it right now
+    if (scoreA == SCORE_OPPOSITE && scoreB == SCORE_OPPOSITE) {
+        return 0; // Wait
     }
 
-    return 0; // Wait, both moving opposite
+    // If one is clearly better, it wins
+    if (scoreA < scoreB) {
+        return 1; // Master
+    } else if (scoreB < scoreA) {
+        return 2; // Slave
+    }
+
+    // TIE BREAKER: Distance
+    uint8 distA = Abs_Dist(master_elev->current_floor, call_floor);
+    uint8 distB = Abs_Dist(slave_elev->current_floor, call_floor);
+
+    if (distA <= distB) {
+        return 1; // Master takes ties
+    } else {
+        return 2; // Slave
+    }
 }

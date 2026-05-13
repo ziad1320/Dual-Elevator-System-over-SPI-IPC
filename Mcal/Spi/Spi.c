@@ -66,6 +66,18 @@ void Spi2_Start_Exchange(Ipc_Packet_t* local_data) {
     SPI2->DR = ((uint8*)&tx_packet)[0];
 }
 
+void Spi2_Slave_Preload(Ipc_Packet_t* local_data) {
+    ENTER_CRITICAL();
+    tx_packet = *local_data;
+    tx_packet.header = IPC_HEADER_BYTE;
+    tx_packet.checksum = IPC_CalculateChecksum(&tx_packet);
+    spi_transfer_complete = 0;
+    
+    // Trigger first byte transmission (preload DR)
+    SPI2->DR = ((uint8*)&tx_packet)[0];
+    EXIT_CRITICAL();
+}
+
 void SPI2_IRQHandler(void) {
     static uint8 byte_index = 0;
     uint8* rx_ptr = (uint8*)&rx_packet;

@@ -1,6 +1,7 @@
 #include "Button.h"
 #include "../exti/exti.h"
 #include "../RCC/RCC.h"
+#include "../Nvic/Nvic.h"
 
 // ---------------------------------------------------------
 //  (State Variables)
@@ -111,7 +112,18 @@ void Button_Init(void) {
     // Equation: (BusId * 32) + BitPos
     uint8 syscfg_id = (syscfg_bus_id * 32) + syscfg_bit_pos;
 
-    RCC_EnablePeripheral(syscfg_id);
+    Rcc_Enable(syscfg_id);
+
+    // 1. Set NVIC Priorities
+    // Highest Priority (0) for EXTI15_10 (IRQ 40) which includes Emergency Stop (PD14)
+    Nvic_SetPriority(40, 0); 
+    // Lower Priority (1) for all other EXTI lines
+    Nvic_SetPriority(6, 1);  // EXTI0
+    Nvic_SetPriority(7, 1);  // EXTI1
+    Nvic_SetPriority(8, 1);  // EXTI2
+    Nvic_SetPriority(9, 1);  // EXTI3
+    Nvic_SetPriority(10, 1); // EXTI4
+    Nvic_SetPriority(23, 1); // EXTI9_5
 
     // 2. Cabin (Port A)
     Exti_Init(EXTI_LINE_0, EXTI_PORT_A, EXTI_EDGE_RISING, Cabin_F1_CB);

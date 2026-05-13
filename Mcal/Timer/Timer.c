@@ -26,7 +26,7 @@ static const uint8 Timer_RccId[6] = {0, 0, 64, 65, 66, 67};
 static boolean Tim_IsPeriodic[6] = {0};
 
 void Timer_Init(Tim_Instance_t TimerInstance, Tim_Prescaler_t Prescaler, uint16 AutoReload) {
-    RCC_EnablePeripheral(Timer_RccId[TimerInstance]);
+    Rcc_Enable(Timer_RccId[TimerInstance]);
     TimerType * timer = Timers[TimerInstance];
     timer->CR[0] = 0; // Reset timer // counter disable
     timer->PSC = Prescaler;
@@ -43,7 +43,7 @@ void Timer_Start(Tim_Instance_t TimerInstance) {
 }
 void Timer_Stop(Tim_Instance_t TimerInstance) {
     TimerType * timer = Timers[TimerInstance];
-    CLR_BIT(timer->CR[0], TIMER_CR1_CEN);
+    CLEAR_BIT(timer->CR[0], TIMER_CR1_CEN);
 
 }
 void Timer_DelayMs(Tim_Instance_t TimerInstance, uint32 DelayMs){
@@ -57,11 +57,11 @@ void Timer_DelayMs(Tim_Instance_t TimerInstance, uint32 DelayMs){
     SET_BIT(timer->CR[0], TIMER_CR1_OPM); // One-pulse mode
     SET_BIT(timer->CR[0], TIMER_CR1_CEN); // Start counting
     timer->CR[0] = (1U << TIMER_CR1_OPM) | (1U << TIMER_CR1_CEN);
-    while (!GET_BIT(timer->SR, TIMER_SR_UIF)) {
+    while (!READ_BIT(timer->SR, TIMER_SR_UIF)) {
         // Poll – CPU is blocked here
     }
     timer->SR = 0; // Clear UIF
-    CLR_BIT(timer->CR[0], TIMER_CR1_CEN); // Stop counter
+    CLEAR_BIT(timer->CR[0], TIMER_CR1_CEN); // Stop counter
 
 
 }
@@ -82,7 +82,7 @@ void Timer_DelayMsAsync(Tim_Instance_t TimerInstance, uint32 DelayMs, TimerCallb
     SET_BIT(timer->CR[0], TIMER_CR1_OPM); // One-pulse mode
 
     SET_BIT(timer->DIER, TIMER_DIER_UIE); // Enable update interrupt
-    Nvic_EnableInterrupt(irqNum);
+    Nvic_EnableIrq(irqNum);
 
     SET_BIT(timer->CR[0], TIMER_CR1_CEN); // Start counting
 }
@@ -105,10 +105,10 @@ void Timer_StartPeriodic(Tim_Instance_t TimerInstance, uint32 PeriodMs, TimerCal
     SET_BIT(timer->EGR, TIMER_EGR_UG);
     timer->SR = 0;
 
-    CLR_BIT(timer->CR[0], TIMER_CR1_OPM);
+    CLEAR_BIT(timer->CR[0], TIMER_CR1_OPM);
 
     SET_BIT(timer->DIER, TIMER_DIER_UIE);
-    Nvic_EnableInterrupt(irqNum);
+    Nvic_EnableIrq(irqNum);
 
     SET_BIT(timer->CR[0], TIMER_CR1_CEN);
 }
@@ -157,12 +157,12 @@ void Timer_SetCompareValue(Tim_Instance_t TimerInstance, Tim_Channel_t Channel, 
 static void Timer_HandleIrq(Tim_Instance_t TimerInstance) {
     TimerType * timer = Timers[TimerInstance];
 
-    if (GET_BIT(timer->SR, TIMER_SR_UIF)) {
+    if (READ_BIT(timer->SR, TIMER_SR_UIF)) {
         timer->SR = 0; // Clear UIF
 
         if (Tim_IsPeriodic[TimerInstance] == 0) {
-            CLR_BIT(timer->DIER, TIMER_DIER_UIE);
-            CLR_BIT(timer->CR[0], TIMER_CR1_CEN);
+            CLEAR_BIT(timer->DIER, TIMER_DIER_UIE);
+            CLEAR_BIT(timer->CR[0], TIMER_CR1_CEN);
         }
 
         if (Tim_AsyncCallbacks[TimerInstance] != 0) {

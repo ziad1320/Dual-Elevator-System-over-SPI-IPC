@@ -4,7 +4,7 @@
 
 #ifndef STM32_TEMPLATE_BUTTON_H
 #define STM32_TEMPLATE_BUTTON_H
-#include "../include/Std_Types.h"
+#include "Std_Types.h"
 #include "../Usart/Usart.h"
 
 // ---------------------------------------------------------
