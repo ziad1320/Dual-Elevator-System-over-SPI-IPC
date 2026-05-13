@@ -19,8 +19,7 @@ set(STARTUP_BASE_DIR                     ${PROJECT_PATH}/STM32-base/startup/)
 
 # Prevent "multiple definition of main" by removing the entry points from the global list
 list(REMOVE_ITEM SOURCE_LIST
-        ${PROJECT_PATH}/src/master.c
-        ${PROJECT_PATH}/src/slave.c
+        ${PROJECT_PATH}/src/main.c
 )
 
 # ==============================================================================
@@ -29,13 +28,13 @@ list(REMOVE_ITEM SOURCE_LIST
 set(MASTER_TARGET Master_Elevator)
 
 add_executable(${MASTER_TARGET}
-        ${PROJECT_PATH}/src/master.c
+        ${PROJECT_PATH}/src/main.c
         ${SOURCE_LIST}
         ${STARTUP_BASE_DIR}/${SERIES_FOLDER}/${MAPPED_DEVICE}.s
 )
 
 target_include_directories(${MASTER_TARGET} PUBLIC ${INCLUDE_LIST})
-target_compile_definitions(${MASTER_TARGET} PUBLIC ${COMPILER_DEFINE})
+target_compile_definitions(${MASTER_TARGET} PUBLIC ${COMPILER_DEFINE} BUILD_AS_MASTER)
 target_compile_options(${MASTER_TARGET} PUBLIC
         ${CPU_PARAMETERS}
         -Wall
@@ -70,7 +69,7 @@ add_custom_command(TARGET ${MASTER_TARGET} POST_BUILD
 set(SLAVE_TARGET Slave_Elevator)
 
 add_executable(${SLAVE_TARGET}
-        ${PROJECT_PATH}/src/slave.c
+        ${PROJECT_PATH}/src/main.c
         ${SOURCE_LIST}
         ${STARTUP_BASE_DIR}/${SERIES_FOLDER}/${MAPPED_DEVICE}.s
 )

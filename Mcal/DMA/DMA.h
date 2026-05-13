@@ -16,16 +16,16 @@
 /* ========================================================================= */
 
 /**
- * @brief Initializes DMA1 Stream 6 for USART2 Transmission.
+ * @brief Initializes DMA2 Stream 7 for USART1 Transmission.
  * Maps Channel 4, sets Memory-to-Peripheral direction, and enables Memory Increment.
  */
-void Dma1_Stream6_Init(uint32 PeripheralAddress);
+void Dma2_Stream7_Init(uint32 PeripheralAddress);
 
 /**
  * @brief Triggers a background DMA transfer.
  * @param SourceAddress The memory address of the string/data array to send.
  * @param Length The number of bytes to send.
  */
-void Dma1_Stream6_Send(uint32 SourceAddress, uint16 Length);
+void Dma2_Stream7_Send(uint32 SourceAddress, uint16 Length);
 
 #endif /* DMA_H */

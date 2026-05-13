@@ -1,3 +1,4 @@
+void _init(void) {}
 #include "../app/App.h"
 #include "../Usart/Usart.h"
 

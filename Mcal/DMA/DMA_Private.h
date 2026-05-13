@@ -35,11 +35,11 @@ typedef struct {
     DmaStreamType STREAM[8]; /* 0x10 to 0xCC - Array of 8 Streams */
 } DmaType;
 
-/* Base Address for DMA1 */
-#define DMA1_BASE_ADDR 0x40026000UL
+/* Base Address for DMA2 */
+#define DMA2_BASE_ADDR 0x40026400UL
 
 /* The Pointer Macro (The Magic Key) */
-#define DMA1_REG ((DmaType*)DMA1_BASE_ADDR)
+#define DMA2_REG ((DmaType*)DMA2_BASE_ADDR)
 
 
 /* ========================================================================= */
@@ -55,8 +55,8 @@ typedef struct {
 #define DMA_DIR_MEM_TO_PERIPH  1U
 
 /* ========================================================================= */
-/* HIFCR REGISTER BITS (For clearing Stream 6 flags)                         */
+/* HIFCR REGISTER BITS (For clearing Stream 7 flags)                         */
 /* ========================================================================= */
-#define DMA_HIFCR_CTCIF6  21U /* Clear Transfer Complete Interrupt Flag for Stream 6 */
+#define DMA_HIFCR_CTCIF7  27U /* Clear Transfer Complete Interrupt Flag for Stream 7 */
 
 #endif /* DMA_PRIVATE_H */

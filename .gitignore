@@ -8,3 +8,5 @@ build*/
 # STM32-base-STM32Cube/
 # CmakeLists.txt
 .cache/
+*.txt
+*.pdf
